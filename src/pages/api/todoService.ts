@@ -1,10 +1,17 @@
 import axiosInstance from './axiosInstance';
 
-export const createTodo = async (title: string, description: string) => {
+export const createTodo = async (
+  title: string,
+  description: string,
+  startDate: string,
+  endDate: string 
+) => {
   try {
     const response = await axiosInstance.post('/create', {
       title,
       description,
+      start_date: startDate,
+      end_date: endDate,
     });
     return response.data;
   } catch (error) {

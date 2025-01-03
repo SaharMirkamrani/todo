@@ -4,6 +4,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import * as React from 'react';
+import TodoCard from "@/components/TodoCard"
 
 export default function LabTabs() {
   const [value, setValue] = React.useState('1');
@@ -28,7 +29,6 @@ export default function LabTabs() {
               label="Today's Task"
               value="1"
               sx={{
-                fontFamily: 'var(--font-poppins)',
                 fontSize: '12px',
                 fontWeight: 'bold',
                 textTransform: 'none',
@@ -45,7 +45,6 @@ export default function LabTabs() {
               label="Tomorrow's Task"
               value="2"
               sx={{
-                fontFamily: 'var(--font-poppins)',
                 fontSize: '12px',
                 width: '50%',
                 fontWeight: 'bold',
@@ -62,7 +61,9 @@ export default function LabTabs() {
         </Box>
 
         <div className="bg-white bg-opacity-80 rounded-b-2xl">
-          <TabPanel value="1">Today`&apos;`s Task</TabPanel>
+          <TabPanel value="1">
+            <TodoCard />
+          </TabPanel>
           <TabPanel value="2">Tomorrow`&apos;`s Task</TabPanel>
         </div>
 
