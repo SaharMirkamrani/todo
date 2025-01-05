@@ -1,12 +1,8 @@
 import axiosInstance from './axiosInstance';
 
-export const createTodo = async (
-  title: string,
-  description: string,
-  startDate: string,
-  endDate: string 
-) => {
+export const createTodo = async (taskData: { title: string; description: string; startDate: string; endDate: string }) => {
   try {
+    const { title, description, startDate, endDate } = taskData;
     const response = await axiosInstance.post('/create', {
       title,
       description,
@@ -18,6 +14,8 @@ export const createTodo = async (
     throw error;
   }
 };
+
+
 
 export const getAllTodos = async () => {
   try {

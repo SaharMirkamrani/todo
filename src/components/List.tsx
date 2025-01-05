@@ -7,6 +7,7 @@ interface Task {
   title: string;
   description: string;
   date: string;
+  endDate: string;
   isComplete: boolean;
 }
 

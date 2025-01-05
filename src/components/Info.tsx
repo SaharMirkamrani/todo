@@ -30,7 +30,7 @@ const Info: React.FC = () => {
     <Box className="flex justify-between px-2 pb-6 pt-2">
       <Box className="flex flex-col gap-1">
         <Typography variant="body2" fontWeight="bold" sx={{ fontSize: 16, color: "black" }}>
-          Tasks Overview
+          Today&apos;s Tasks
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ fontSize: 12 }}>
           {formattedDate}

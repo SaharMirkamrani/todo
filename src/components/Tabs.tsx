@@ -1,62 +1,32 @@
-import React, { useEffect, useState } from "react";
-import Info from "@/components/Info";
-import List from "@/components/List";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getAllTodos } from "@/pages/api/todoService";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
+import Info from "@/components/Info";
+import List from "@/components/List";
 import formatDate from "@/utils/formatTime";
-
-type Task = {
-  id: number;
-  title: string;
-  description: string;
-  date: string;
-  isComplete: boolean;
-};
-
-type ApiTask = {
-  _id: string;
-  title: string;
-  description: string;
-  start_date: string;
-  is_completed: boolean;
-};
+import { ApiTask } from '@/types'
 
 export default function LabTabs() {
-  const [value, setValue] = useState("1");
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  
+  const [value, setValue] = React.useState("1");
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await getAllTodos();
-        const formattedTasks: Task[] = response.data.map((task: ApiTask) => ({
-          id: task._id,
-          title: task.title,
-          description: task.description,
-          date: task.start_date,
-          isComplete: task.is_completed,
-        }));
-
-        setTasks(formattedTasks);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load tasks. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTasks();
-  }, []);
+  const { data: tasksData, isLoading, isError, error } = useQuery({
+    queryKey: ['todos'],
+    queryFn: getAllTodos,
+    select: (data) => {
+      return data.data.map((task: ApiTask) => ({
+        id: task._id,
+        title: task.title,
+        description: task.description,
+        date: task.start_date,
+        isComplete: task.is_completed,
+      }));
+    },
+  });
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -112,49 +82,48 @@ export default function LabTabs() {
         <div className="bg-white bg-opacity-80 rounded-b-2xl">
           <TabPanel value="1">
             <Info />
-            {loading ? (
+            {isLoading ? (
               <div className="flex justify-center items-center py-4">
                 <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
               </div>
-            ) : error ? (
-              <p className="text-red-500">{error}</p>
+            ) : isError ? (
+              <p className="text-red-500">{error instanceof Error ? error.message : "Error loading tasks"}</p>
             ) : (
               <List
-              tasks={tasks
-                .filter(
-                  (task) =>
-                    new Date(task.date).toDateString() ===
-                    new Date().toDateString()
-                )
-                .map((task) => ({
-                  ...task,
-                  date: formatDate(task.date),
-                }))}
-            />
-
+                tasks={tasksData
+                  .filter(
+                    (task) => new Date(task.date).toDateString() === new Date().toDateString()
+                  )
+                  .map((task) => ({
+                    ...task,
+                    date: formatDate(task.date),
+                  }))
+                }
+              />
             )}
           </TabPanel>
+
           <TabPanel value="2">
-            {loading ? (
+            {isLoading ? (
               <div className="flex justify-center items-center py-4">
                 <div className="w-8 h-8 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
               </div>
-            ) : error ? (
-              <p className="text-red-500">{error}</p>
+            ) : isError ? (
+              <p className="text-red-500">{error instanceof Error ? error.message : "Error loading tasks"}</p>
             ) : (
               <List
-                tasks={tasks
+                tasks={tasksData
                   .filter(
                     (task) =>
-                      new Date(task.date).toDateString() ===
-                      new Date(
+                      new Date(task.date).toDateString() === new Date(
                         new Date().setDate(new Date().getDate() + 1)
                       ).toDateString()
                   )
                   .map((task) => ({
                     ...task,
                     date: formatDate(task.date),
-                  }))}
+                  }))
+                }
               />
             )}
           </TabPanel>

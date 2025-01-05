@@ -20,7 +20,7 @@ export default function TodoCard({
   onTaskClick,
 }: TodoCardProps) {
   const [openModal, setOpenModal] = useState(false);
-  const [taskData, setTaskData] = useState({
+  const [ ,setTaskData] = useState({
     title: '',
     description: '',
     date: '',
@@ -105,7 +105,6 @@ export default function TodoCard({
         open={openModal}
         handleClose={handleCloseModal}
         mode="update"
-        taskData={taskData}
         onDelete={handleDelete}
         onSave={handleSave}
       />

@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { Box, Modal, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { Add, Save, DeleteForever } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import ReusableButton from '@/components/Button';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createTodo } from '@/pages/api/todoService';
 
 interface TaskModalProps {
   open: boolean;
@@ -12,6 +14,7 @@ interface TaskModalProps {
     title: string;
     description: string;
     date: string;
+    endDate: string;
   };
   onDelete: () => void;
   onSave: (data: unknown) => void;
@@ -21,37 +24,62 @@ interface TaskFormValues {
   title: string;
   description: string;
   date: string;
+  endDate: string;
 }
 
-const TaskModal: React.FC<TaskModalProps> = ({
-  open,
-  handleClose,
-  mode,
-  taskData,
-  onDelete,
-  onSave,
-}) => {
+const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, mode, taskData }) => {
+  const queryClient = useQueryClient();
+
   const { handleSubmit, control, reset } = useForm<TaskFormValues>({
     defaultValues: {
       title: taskData?.title || '',
       description: taskData?.description || '',
       date: taskData?.date || '',
+      endDate: taskData?.endDate || '',
     },
   });
 
-  useEffect(() => {
-    reset({
-      title: taskData?.title || '',
-      description: taskData?.description || '',
-      date: taskData?.date || '',
-    });
-  }, [taskData, reset]);
+  const createMutation = useMutation({
+    mutationFn: createTodo,
+    onSuccess: () =>
+    {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      queryClient.invalidateQueries(['tasks']);
+      handleClose();
+    },
+  });
 
-  const onSubmit = (data: TaskFormValues) => {
-    onSave(data);
-    handleClose();
-    reset();
+  const onSubmit = async (data: TaskFormValues) => {
+    try {
+      await createMutation.mutateAsync({
+        title: data.title,
+        description: data.description,
+        startDate: data.date,
+        endDate: data.endDate,
+      });
+    } catch (error) {
+      console.error('Error creating task:', error);
+    }
   };
+
+  useEffect(() => {
+    if (mode === 'update' && taskData) {
+      reset({
+        title: taskData.title,
+        description: taskData.description,
+        date: taskData.date,
+        endDate: taskData.endDate,
+      });
+    } else {
+      reset({
+        title: '',
+        description: '',
+        date: '',
+        endDate: '',
+      });
+    }
+  }, [open, mode, taskData, reset]);
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -111,11 +139,28 @@ const TaskModal: React.FC<TaskModalProps> = ({
           <Controller
             name="date"
             control={control}
-            rules={{ required: 'Date is required' }}
+            rules={{ required: 'Start Date is required' }}
             render={({ field, fieldState }) => (
               <TextField
                 fullWidth
-                label="Date"
+                label="Start Date"
+                type="date"
+                {...field}
+                InputLabelProps={{ shrink: true }}
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                sx={{ marginBottom: 2 }}
+              />
+            )}
+          />
+
+          <Controller
+            name="endDate"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                fullWidth
+                label="End Date"
                 type="date"
                 {...field}
                 InputLabelProps={{ shrink: true }}
@@ -129,18 +174,9 @@ const TaskModal: React.FC<TaskModalProps> = ({
           <div className="flex justify-between">
             <ReusableButton
               text={mode === 'create' ? 'Create Task' : 'Update Task'}
-              icon={mode === 'create' ? <Add /> : <Save />}
+              icon={<Add />}
               onClick={handleSubmit(onSubmit)}
             />
-
-            {mode === 'update' && (
-              <ReusableButton
-                text="Delete Task"
-                icon={<DeleteForever />}
-                onClick={onDelete}
-                variant='danger'
-              />
-            )}
           </div>
         </form>
       </Box>
