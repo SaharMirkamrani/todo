@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import TaskModal from './TaskModal';
 
 const BpIcon = styled('span')(({ theme }) => ({
   borderRadius: '50%',
@@ -56,43 +57,95 @@ function BpCheckbox(props: CheckboxProps) {
 
 export default function BasicCard() {
   const [isChecked, setIsChecked] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [taskData, setTaskData] = useState({
+    title: '',
+    description: '',
+    date: '',
+  });
+
+  const handleCheckboxClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked);
   };
 
+  const handleCardClick = () => {
+    const task = {
+      title: 'Client review & feedback',
+      description: 'Well meaning and kindly. A benevolent smile.',
+      date: '2025-01-05',
+    };
+    setTaskData(task);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleSave = (data: unknown) => {
+    console.log('Saved data:', data);
+    setOpenModal(false);
+  };
+
+  const handleDelete = () => {
+    console.log('Task deleted');
+    setOpenModal(false);
+  };
+
   return (
-    <Card sx={{ minWidth: 275, borderRadius: "10px", boxShadow: "none" }}>
-      <CardContent>
-        <div className="flex justify-between items-center">
-          <div>
-            <Typography
-              gutterBottom
-              sx={{
-                fontSize: 15,
-                fontWeight: "bold",
-                textDecoration: isChecked ? "line-through" : "none",
-              }}
-            >
-              Client review & feedback
-            </Typography>
-            <Typography variant="body2" color="gray" sx={{ fontSize: 12 }}>
-              well meaning and kindly. a benevolent smile
-            </Typography>
+    <>
+      <Card
+        sx={{ minWidth: 275, borderRadius: '10px', boxShadow: 'none' }}
+        onClick={handleCardClick}
+      >
+        <CardContent>
+          <div className="flex justify-between items-center">
+            <div>
+              <Typography
+                gutterBottom
+                sx={{
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                  textDecoration: isChecked ? 'line-through' : 'none',
+                }}
+              >
+                Client review & feedback
+              </Typography>
+              <Typography variant="body2" color="gray" sx={{ fontSize: 12 }}>
+                Well meaning and kindly. A benevolent smile.
+              </Typography>
+            </div>
+
+            <BpCheckbox
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+              onClick={handleCheckboxClick}
+            />
           </div>
 
-          <BpCheckbox checked={isChecked} onChange={handleCheckboxChange} />
-        </div>
+          <hr className="mt-3" />
+          <Typography
+            variant="body2"
+            color="gray"
+            sx={{ fontSize: 12, marginTop: '10px' }}
+          >
+            Today 10:00 PM - 11:45 PM
+          </Typography>
+        </CardContent>
+      </Card>
 
-        <hr className="mt-3" />
-        <Typography
-          variant="body2"
-          color="gray"
-          sx={{ fontSize: 12, marginTop: "10px" }}
-        >
-          Today 10:00 PM - 11:45 PM
-        </Typography>
-      </CardContent>
-    </Card>
+      <TaskModal
+        open={openModal}
+        handleClose={handleCloseModal}
+        mode="update"
+        taskData={taskData}
+        onDelete={handleDelete}
+        onSave={handleSave}
+      />
+    </>
   );
 }

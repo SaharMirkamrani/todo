@@ -17,6 +17,15 @@ const Info: React.FC = () => {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
+  const handleSave = (data: unknown) => {
+    console.log('Task saved:', data);
+    setOpenModal(false);
+  };
+
+  const handleDelete = () => {
+    console.log('Task deleted');
+  };
+
   return (
     <Box className="flex justify-between px-2 pb-6 pt-2">
       <Box className="flex flex-col gap-1">
@@ -29,7 +38,13 @@ const Info: React.FC = () => {
       </Box>
       <Button text="Add Task" icon={<AddIcon />} onClick={handleOpen} />
       
-      <TaskModal open={openModal} handleClose={handleClose} mode="create" />
+      <TaskModal 
+        open={openModal} 
+        handleClose={handleClose} 
+        mode="create" 
+        onDelete={handleDelete}
+        onSave={handleSave}
+      />
     </Box>
   );
 };

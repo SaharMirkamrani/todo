@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Modal, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
+import { Add, Save, DeleteForever } from '@mui/icons-material';
 import ReusableButton from '@/components/Button';
-import Add from '@mui/icons-material/Add';
-import Save from '@mui/icons-material/Save';
 
 interface TaskModalProps {
   open: boolean;
   handleClose: () => void;
   mode: 'create' | 'update';
-  initialData?: {
+  taskData?: {
     title: string;
     description: string;
     date: string;
   };
+  onDelete: () => void;
+  onSave: (data: unknown) => void;
 }
 
 interface TaskFormValues {
@@ -26,22 +27,28 @@ const TaskModal: React.FC<TaskModalProps> = ({
   open,
   handleClose,
   mode,
-  initialData,
+  taskData,
+  onDelete,
+  onSave,
 }) => {
   const { handleSubmit, control, reset } = useForm<TaskFormValues>({
     defaultValues: {
-      title: initialData?.title || '',
-      description: initialData?.description || '',
-      date: initialData?.date || '',
+      title: taskData?.title || '',
+      description: taskData?.description || '',
+      date: taskData?.date || '',
     },
   });
 
+  useEffect(() => {
+    reset({
+      title: taskData?.title || '',
+      description: taskData?.description || '',
+      date: taskData?.date || '',
+    });
+  }, [taskData, reset]);
+
   const onSubmit = (data: TaskFormValues) => {
-    if (mode === 'create') {
-      console.log('Create task:', data);
-    } else if (mode === 'update') {
-      console.log('Update task:', data);
-    }
+    onSave(data);
     handleClose();
     reset();
   };
@@ -69,6 +76,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
           {mode === 'create' ? 'Create Task' : 'Update Task'}
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
+
           <Controller
             name="title"
             control={control}
@@ -118,12 +126,21 @@ const TaskModal: React.FC<TaskModalProps> = ({
             )}
           />
 
-          <div className="flex justify-center">
+          <div className="flex justify-between">
             <ReusableButton
               text={mode === 'create' ? 'Create Task' : 'Update Task'}
               icon={mode === 'create' ? <Add /> : <Save />}
-              onClick={() => handleSubmit(onSubmit)()}
+              onClick={handleSubmit(onSubmit)}
             />
+
+            {mode === 'update' && (
+              <ReusableButton
+                text="Delete Task"
+                icon={<DeleteForever />}
+                onClick={onDelete}
+                variant='danger'
+              />
+            )}
           </div>
         </form>
       </Box>

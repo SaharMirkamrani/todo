@@ -5,16 +5,35 @@ interface ReusableButtonProps {
   text: string;
   icon: ReactNode;
   onClick?: () => void;
+  variant?: 'primary' | 'danger';
 }
 
-const ReusableButton: React.FC<ReusableButtonProps> = ({ text, icon, onClick }) => {
+const ReusableButton: React.FC<ReusableButtonProps> = ({ text, icon, onClick, variant = 'primary' }) => {
+  const buttonStyles = {
+    primary: {
+      bgcolor: 'rgba(7, 96, 251, 0.15)',
+      color: '#0760FB',
+      '&:hover': {
+        bgcolor: 'rgba(7, 96, 251, 0.4)',
+        boxShadow: 'none',
+      },
+    },
+    danger: {
+      bgcolor: 'rgba(255, 0, 0, 0.15)',
+      color: '#D32F2F',
+      '&:hover': {
+        bgcolor: 'rgba(255, 0, 0, 0.4)',
+        boxShadow: 'none',
+      },
+    },
+  };
+
   return (
     <Button
       variant="contained"
       startIcon={icon}
       sx={{
-        bgcolor: 'rgba(7, 96, 251, 0.15)',
-        color: '#0760FB',
+        ...buttonStyles[variant],
         textTransform: 'none',
         fontWeight: 'bold',
         boxShadow: 'none',
@@ -27,10 +46,6 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({ text, icon, onClick }) 
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        '&:hover': {
-          bgcolor: 'rgba(7, 96, 251, 0.4)',
-          boxShadow: 'none',
-        },
       }}
       onClick={onClick}
     >
