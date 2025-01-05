@@ -1,6 +1,6 @@
 import Tabs from "@/components/Tabs";
-import { Poppins } from "next/font/google";
 import { createTheme, ThemeProvider } from '@mui/material';
+import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
   variable: "--font-poppins",

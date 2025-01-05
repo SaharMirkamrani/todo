@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import * as React from 'react';
 import TodoCard from "@/components/TodoCard"
+import Info from "@/components/Info";
 
 export default function LabTabs() {
   const [value, setValue] = React.useState('1');
@@ -62,6 +63,7 @@ export default function LabTabs() {
 
         <div className="bg-white bg-opacity-80 rounded-b-2xl">
           <TabPanel value="1">
+            <Info />
             <TodoCard />
           </TabPanel>
           <TabPanel value="2">Tomorrow`&apos;`s Task</TabPanel>
