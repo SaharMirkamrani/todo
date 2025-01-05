@@ -3,7 +3,7 @@ import TodoCard from './TodoCard';
 import TaskModal from './TaskModal';
 
 interface Task {
-  id: number;
+  id: string;
   title: string;
   description: string;
   date: string;
@@ -22,14 +22,19 @@ const List: React.FC<ListProps> = ({ tasks }) => {
     setTaskData(task);
   };
 
+  console.log(tasks)
+
   return (
     <div className='flex flex-col gap-3'>
       {tasks.map((task) => (
         <TodoCard
+          id={task.id}
           key={task.id}
           title={task.title}
           description={task.description}
+          isComplete={task.isComplete}
           date={task.date}
+          endDate={task.endDate}
           onTaskClick={() => handleTaskClick(task)}
         />
       ))}

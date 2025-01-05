@@ -5,11 +5,15 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 import TaskModal from './TaskModal';
+import { updateTodo } from '@/pages/api/todoService';
 
 interface TodoCardProps {
+  id: string;
   title: string;
   description: string;
   date: string;
+  endDate: string;
+  isComplete: boolean;
   onTaskClick: () => void;
 }
 
@@ -17,31 +21,44 @@ export default function TodoCard({
   title,
   description,
   date,
+  id,
+  isComplete,
+  endDate,
   onTaskClick,
 }: TodoCardProps) {
   const [openModal, setOpenModal] = useState(false);
-  const [ ,setTaskData] = useState({
+  const [taskData, setTaskData] = useState({
+    id: '',
     title: '',
     description: '',
     date: '',
+    isComplete,
+    endDate: ''
   });
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(isComplete);
 
   const handleCheckboxClick = (event: React.MouseEvent) => {
     event.stopPropagation();
   };
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheckboxChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(event.target.checked);
+    try {
+      await updateTodo(id, event.target.checked);
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
   };
 
   const handleCardClick = () => {
-    const task = {
+    setTaskData({
+      id,
       title,
       description,
       date,
-    };
-    setTaskData(task);
+      endDate,
+      isComplete
+    });
     setOpenModal(true);
   };
 
@@ -58,6 +75,7 @@ export default function TodoCard({
     console.log('Task deleted');
     setOpenModal(false);
   };
+
 
   return (
     <>
@@ -107,6 +125,7 @@ export default function TodoCard({
         mode="update"
         onDelete={handleDelete}
         onSave={handleSave}
+        taskData={taskData}
       />
     </>
   );

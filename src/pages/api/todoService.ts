@@ -15,8 +15,6 @@ export const createTodo = async (taskData: { title: string; description: string;
   }
 };
 
-
-
 export const getAllTodos = async () => {
   try {
     const response = await axiosInstance.get('/fetch/all');
