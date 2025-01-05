@@ -7,7 +7,7 @@ interface Task {
   title: string;
   description: string;
   date: string;
-  isChecked: boolean;
+  isComplete: boolean;
 }
 
 interface ListProps {
