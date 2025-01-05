@@ -6,6 +6,113 @@ import { styled } from '@mui/material/styles';
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 import TaskModal from './TaskModal';
 
+interface TodoCardProps {
+  title: string;
+  description: string;
+  date: string;
+  onTaskClick: () => void;
+}
+
+export default function TodoCard({
+  title,
+  description,
+  date,
+  onTaskClick,
+}: TodoCardProps) {
+  const [openModal, setOpenModal] = useState(false);
+  const [taskData, setTaskData] = useState({
+    title: '',
+    description: '',
+    date: '',
+  });
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(event.target.checked);
+  };
+
+  const handleCardClick = () => {
+    const task = {
+      title,
+      description,
+      date,
+    };
+    setTaskData(task);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleSave = (data: unknown) => {
+    console.log('Saved data:', data);
+    setOpenModal(false);
+  };
+
+  const handleDelete = () => {
+    console.log('Task deleted');
+    setOpenModal(false);
+  };
+
+  return (
+    <>
+      <Card
+        sx={{ minWidth: 275, borderRadius: '10px', boxShadow: 'none' }}
+        onClick={onTaskClick || handleCardClick}
+      >
+        <CardContent>
+          <div className="flex justify-between items-center">
+            <div>
+              <Typography
+                gutterBottom
+                sx={{
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                  textDecoration: isChecked ? 'line-through' : 'none',
+                }}
+              >
+                {title}
+              </Typography>
+              <Typography variant="body2" color="gray" sx={{ fontSize: 12 }}>
+                {description}
+              </Typography>
+            </div>
+
+            <BpCheckbox
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+              onClick={handleCheckboxClick}
+            />
+          </div>
+
+          <hr className="mt-3" />
+          <Typography
+            variant="body2"
+            color="gray"
+            sx={{ fontSize: 12, marginTop: '10px' }}
+          >
+            {date}
+          </Typography>
+        </CardContent>
+      </Card>
+
+      <TaskModal
+        open={openModal}
+        handleClose={handleCloseModal}
+        mode="update"
+        taskData={taskData}
+        onDelete={handleDelete}
+        onSave={handleSave}
+      />
+    </>
+  );
+}
+
 const BpIcon = styled('span')(({ theme }) => ({
   borderRadius: '50%',
   width: 20,
@@ -52,100 +159,5 @@ function BpCheckbox(props: CheckboxProps) {
       inputProps={{ 'aria-label': 'Checkbox demo' }}
       {...props}
     />
-  );
-}
-
-export default function BasicCard() {
-  const [isChecked, setIsChecked] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [taskData, setTaskData] = useState({
-    title: '',
-    description: '',
-    date: '',
-  });
-
-  const handleCheckboxClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-  };
-
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsChecked(event.target.checked);
-  };
-
-  const handleCardClick = () => {
-    const task = {
-      title: 'Client review & feedback',
-      description: 'Well meaning and kindly. A benevolent smile.',
-      date: '2025-01-05',
-    };
-    setTaskData(task);
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  const handleSave = (data: unknown) => {
-    console.log('Saved data:', data);
-    setOpenModal(false);
-  };
-
-  const handleDelete = () => {
-    console.log('Task deleted');
-    setOpenModal(false);
-  };
-
-  return (
-    <>
-      <Card
-        sx={{ minWidth: 275, borderRadius: '10px', boxShadow: 'none' }}
-        onClick={handleCardClick}
-      >
-        <CardContent>
-          <div className="flex justify-between items-center">
-            <div>
-              <Typography
-                gutterBottom
-                sx={{
-                  fontSize: 15,
-                  fontWeight: 'bold',
-                  textDecoration: isChecked ? 'line-through' : 'none',
-                }}
-              >
-                Client review & feedback
-              </Typography>
-              <Typography variant="body2" color="gray" sx={{ fontSize: 12 }}>
-                Well meaning and kindly. A benevolent smile.
-              </Typography>
-            </div>
-
-            <BpCheckbox
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-              onClick={handleCheckboxClick}
-            />
-          </div>
-
-          <hr className="mt-3" />
-          <Typography
-            variant="body2"
-            color="gray"
-            sx={{ fontSize: 12, marginTop: '10px' }}
-          >
-            Today 10:00 PM - 11:45 PM
-          </Typography>
-        </CardContent>
-      </Card>
-
-      <TaskModal
-        open={openModal}
-        handleClose={handleCloseModal}
-        mode="update"
-        taskData={taskData}
-        onDelete={handleDelete}
-        onSave={handleSave}
-      />
-    </>
   );
 }
