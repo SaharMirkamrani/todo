@@ -1,23 +1,23 @@
 import React, { useEffect } from 'react';
 import { Box, Modal, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
-import { Add } from '@mui/icons-material';
+import { Add, Delete } from '@mui/icons-material';
 import ReusableButton from '@/components/Button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createTodo } from '@/pages/api/todoService';
+import { createTodo, deleteTodo } from '@/pages/api/todoService';
 
 interface TaskModalProps {
   open: boolean;
   handleClose: () => void;
   mode: 'create' | 'update';
   taskData?: {
+    id: string;
     title: string;
     description: string;
     date: string;
     endDate: string;
   };
-  onDelete: () => void;
-  onSave: (data: unknown) => void;
+  onDelete: (id: string) => void;
 }
 
 interface TaskFormValues {
@@ -27,7 +27,7 @@ interface TaskFormValues {
   endDate: string;
 }
 
-const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, mode, taskData }) => {
+const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, mode, taskData, onDelete }) => {
   const queryClient = useQueryClient();
 
   const { handleSubmit, control, reset } = useForm<TaskFormValues>({
@@ -62,6 +62,28 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, mode, taskData
       console.error('Error creating task:', error);
     }
   };
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      queryClient.invalidateQueries(['tasks']);
+      handleClose();
+    },
+  });
+
+  const handleDelete = async () => {
+    if (taskData?.id) {
+      try {
+        await deleteMutation.mutateAsync(taskData.id);
+        onDelete(taskData.id);
+      } catch (error) {
+        console.error('Error deleting task:', error);
+      }
+    }
+  };
+  
 
   useEffect(() => {
     if (mode === 'update' && taskData) {
@@ -104,7 +126,6 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, mode, taskData
           {mode === 'create' ? 'Create Task' : 'Update Task'}
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
-
           <Controller
             name="title"
             control={control}
@@ -172,11 +193,22 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, mode, taskData
           />
 
           <div className="flex justify-between">
-            <ReusableButton
-              text={mode === 'create' ? 'Create Task' : 'Update Task'}
-              icon={<Add />}
-              onClick={handleSubmit(onSubmit)}
-            />
+            {mode === 'create' ? (
+              <ReusableButton
+                text="Create Task"
+                icon={<Add />}
+                onClick={handleSubmit(onSubmit)}
+              />
+            ) : (
+              <>
+                <ReusableButton
+                  text="Delete Task"
+                  icon={<Delete />}
+                  onClick={handleDelete}
+                  variant="danger"
+                />
+              </>
+            )}
           </div>
         </form>
       </Box>

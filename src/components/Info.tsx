@@ -17,11 +17,6 @@ const Info: React.FC = () => {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  const handleSave = (data: unknown) => {
-    console.log('Task saved:', data);
-    setOpenModal(false);
-  };
-
   const handleDelete = () => {
     console.log('Task deleted');
   };
@@ -43,7 +38,6 @@ const Info: React.FC = () => {
         handleClose={handleClose} 
         mode="create" 
         onDelete={handleDelete}
-        onSave={handleSave}
       />
     </Box>
   );

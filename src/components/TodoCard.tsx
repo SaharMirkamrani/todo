@@ -66,11 +66,6 @@ export default function TodoCard({
     setOpenModal(false);
   };
 
-  const handleSave = (data: unknown) => {
-    console.log('Saved data:', data);
-    setOpenModal(false);
-  };
-
   const handleDelete = () => {
     console.log('Task deleted');
     setOpenModal(false);
@@ -124,7 +119,6 @@ export default function TodoCard({
         handleClose={handleCloseModal}
         mode="update"
         onDelete={handleDelete}
-        onSave={handleSave}
         taskData={taskData}
       />
     </>

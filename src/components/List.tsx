@@ -45,7 +45,6 @@ const List: React.FC<ListProps> = ({ tasks }) => {
           handleClose={() => setTaskData(null)}
           taskData={taskData}
           mode="update"
-          onSave={(data) => console.log('Saved data:', data)}
           onDelete={() => console.log('Task deleted')}
         />
       )}
