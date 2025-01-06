@@ -1,40 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# To-Do List App
 
-## Getting Started
-
-First, run the development server:
+## Installation and Running
 
 ```bash
+npm i
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Overview
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+This is a simple To-Do List application built as part of an interview task for **Ideall Technology company**. It allows users to manage tasks with features like creating, updating, deleting, and viewing tasks. The application is built with the following technologies:
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- Next.js: A React framework for server-side rendering and static website generation.
+- React-Query: A powerful data-fetching library to manage server state and caching.
+- Tailwind CSS: A utility-first CSS framework for rapid UI development.
+- Material-UI: A popular React component library for building stylish UI components.
+- Axios: A promise-based HTTP client for the browser and Node.js.
+- React Hook Form: A library for handling form inputs and validation with ease.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Create a Task: Users can create new tasks by filling out a form with the task's title, description, and dates.
+- Update a Task: Users can mark tasks as "complete" by updating the task's isComplete status, which is reflected in the list immediately.
+- Delete a Task: Tasks can be deleted by clicking on the task and confirming the deletion within a modal.
+- Task List Sorting: The tasks are displayed with sorting options for:
+  All, open, closed tasks
+- Open tasks (incomplete)
+- Closed tasks (completed)
+- Task Modal: Clicking on a task in the list opens a modal showing detailed information about the task, including the option to delete it. Further enhancements can be made to allow updates to the task's title, description, and dates.
 
-## Learn More
+- Instant List Updates: Thanks to React-Query, the task list updates instantly without requiring a page reload after actions like creating, deleting, or updating tasks.
+- Create Task Modal: A modal with input fields for creating a new task, powered by React Hook Form for form validation. We can enhance this further by integrating Zod for better validation.
 
-To learn more about Next.js, take a look at the following resources:
+## Limitations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Archived Tab: The original design included an "Archived" tab, but it has not been implemented in this version. This is because the backend API does not currently provide an is_archived property for tasks.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Future Improvements
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+- Zod Validation: Currently, the app uses basic form handling with React Hook Form. We can enhance this by integrating Zod for better schema validation.
+- Edit Task Functionality: The ability to update the task's title, description, and possibly start and end dates could be added in future versions.
