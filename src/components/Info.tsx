@@ -4,15 +4,23 @@ import React, { useState } from 'react';
 import Button from '@/components/Button';
 import TaskModal from '@/components/TaskModal';
 
-const getFormattedDate = () => {
+const getFormattedDate = (isTomorrow: boolean) => {
   const currentDate = new Date();
+  if (isTomorrow) {
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
   const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: '2-digit', month: 'long' };
   return currentDate.toLocaleDateString('en-US', options);
 };
 
-const Info: React.FC = () => {
+interface InfoProps {
+  text: 'today' | 'tomorrow';
+}
+
+const Info: React.FC<InfoProps> = ({ text }) => {
   const [openModal, setOpenModal] = useState(false);
-  const formattedDate = getFormattedDate();
+  
+  const formattedDate = getFormattedDate(text === 'tomorrow');
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
@@ -25,7 +33,7 @@ const Info: React.FC = () => {
     <Box className="flex justify-between px-2 pb-6 pt-2">
       <Box className="flex flex-col gap-1">
         <Typography variant="body2" fontWeight="bold" sx={{ fontSize: 16, color: "black" }}>
-          Today&apos;s Tasks
+          {text === 'today' ? "Today's Tasks" : "Tomorrow's Tasks"}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ fontSize: 12 }}>
           {formattedDate}
