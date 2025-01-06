@@ -25,8 +25,6 @@ This is a simple To-Do List application built as part of an interview task for *
 - Delete a Task: Tasks can be deleted by clicking on the task and confirming the deletion within a modal.
 - Task List Sorting: The tasks are displayed with sorting options for:
   All, open, closed tasks
-- Open tasks (incomplete)
-- Closed tasks (completed)
 - Task Modal: Clicking on a task in the list opens a modal showing detailed information about the task, including the option to delete it. Further enhancements can be made to allow updates to the task's title, description, and dates.
 
 - Instant List Updates: Thanks to React-Query, the task list updates instantly without requiring a page reload after actions like creating, deleting, or updating tasks.
