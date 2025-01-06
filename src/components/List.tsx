@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import TodoCard from "./TodoCard";
 import TaskModal from "./TaskModal";
+import TodoCard from "./TodoCard";
 
 interface Task {
   id: string;
@@ -74,13 +74,8 @@ const List: React.FC<ListProps> = ({ tasks }) => {
 
       {filteredTasks.map((task) => (
         <TodoCard
-          id={task.id}
           key={task.id}
-          title={task.title}
-          description={task.description}
-          isComplete={task.isComplete}
-          date={task.date}
-          endDate={task.endDate}
+          task={task}
           onTaskClick={() => handleTaskClick(task)}
         />
       ))}

@@ -39,7 +39,7 @@ const Info: React.FC<InfoProps> = ({ text }) => {
           {formattedDate}
         </Typography>
       </Box>
-      <Button text="Add Task" icon={<AddIcon />} onClick={handleOpen} />
+      <Button text="New Task" icon={<AddIcon />} onClick={handleOpen} />
       
       <TaskModal 
         open={openModal} 

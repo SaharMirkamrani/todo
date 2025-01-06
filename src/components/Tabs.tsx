@@ -10,27 +10,7 @@ import Info from "@/components/Info";
 import List from "@/components/List";
 import formatDate from "@/utils/formatTime";
 import { ApiTask } from "@/types";
-
-const isToday = (date: string) => {
-  const taskDate = new Date(date);
-  const today = new Date();
-  return (
-    taskDate.getDate() === today.getDate() &&
-    taskDate.getMonth() === today.getMonth() &&
-    taskDate.getFullYear() === today.getFullYear()
-  );
-};
-
-const isTomorrow = (date: string) => {
-  const taskDate = new Date(date);
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  return (
-    taskDate.getDate() === tomorrow.getDate() &&
-    taskDate.getMonth() === tomorrow.getMonth() &&
-    taskDate.getFullYear() === tomorrow.getFullYear()
-  );
-};
+import { isToday, isTomorrow } from "@/utils/dateUtils";
 
 export default function LabTabs() {
   const [value, setValue] = useState("1");
@@ -68,12 +48,12 @@ export default function LabTabs() {
               label="Today's Task"
               value="1"
               sx={{
-                fontSize: "12px",
+                fontSize: "13px",
                 fontWeight: "bold",
                 textTransform: "none",
                 padding: "24px 30px 15px",
                 width: "50%",
-                color: value === "1" ? "black" : "inherit",
+                color: "black",
                 borderBottom: value === "1" ? "1px solid black" : "none",
                 "&.Mui-selected": {
                   color: "black",
@@ -84,12 +64,12 @@ export default function LabTabs() {
               label="Tomorrow's Task"
               value="2"
               sx={{
-                fontSize: "12px",
+                fontSize: "13px",
                 width: "50%",
                 fontWeight: "bold",
                 textTransform: "none",
                 padding: "24px 30px 15px",
-                color: value === "2" ? "black" : "inherit",
+                color: "black",
                 borderBottom: value === "2" ? "1px solid black" : "none",
                 "&.Mui-selected": {
                   color: "black",

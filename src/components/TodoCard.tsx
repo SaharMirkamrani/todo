@@ -1,31 +1,30 @@
-import React, { useState } from 'react';
+import { updateTodo } from '@/pages/api/todoService';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import React, { useState } from 'react';
 import TaskModal from './TaskModal';
-import { updateTodo } from '@/pages/api/todoService';
 
 interface TodoCardProps {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  endDate: string;
-  isComplete: boolean;
+  task: {
+    id: string;
+    title: string;
+    description: string;
+    date: string;
+    endDate: string;
+    isComplete: boolean;
+  };
   onTaskClick: () => void;
 }
 
 export default function TodoCard({
-  title,
-  description,
-  date,
-  id,
-  isComplete,
-  endDate,
+  task,
   onTaskClick,
 }: TodoCardProps) {
+  const { id, title, description, date, endDate, isComplete } = task;
+
   const [openModal, setOpenModal] = useState(false);
   const [taskData, setTaskData] = useState({
     id: '',
@@ -70,7 +69,6 @@ export default function TodoCard({
     console.log('Task deleted');
     setOpenModal(false);
   };
-
 
   return (
     <>
